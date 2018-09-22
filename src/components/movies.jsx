@@ -1,33 +1,25 @@
 import React, { Component } from 'react';
 import { getMovies } from '../services/fakeMovieService';
 import Like from './common/like';
+import Pagination from './common/pagination';
+import { paginate } from '../utils/paginate';
 
 class Movies extends Component {
     state = {
-        movies: getMovies()
+        movies: getMovies(),
+        pageSize: 5,
+        currentPage: 1
     };
-
-    handleDelete = (movie) => {
-        const movies = this.state.movies.filter(m => m._id !== movie._id);
-        this.setState({ movies });
-    };
-
-    handleLike = (movie) => {
-        const movies = [...this.state.movies];
-        const index = movies.indexOf(movie);
-        movies[index] = {...movies[index]};
-        movies[index].liked = !movies[index].liked;
-        this.setState({
-            movies
-        });
-    }
-
+    
     render() {
         const { length: count } = this.state.movies;
+        const { pageSize, currentPage, movies: allMovies } = this.state;
 
         if (count === 0) {
             return <p>There are not movies in the database.</p>
         }
+
+        const movies = paginate(allMovies, currentPage, pageSize);
 
         return (
             <React.Fragment>
@@ -44,7 +36,7 @@ class Movies extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        { this.state.movies.map(movie => (
+                        { movies.map(movie => (
                             <tr key={movie._id}>
                                 <td>{movie.title}</td>
                                 <td>{movie.genre.name}</td>
@@ -62,9 +54,35 @@ class Movies extends Component {
                         ))}
                     </tbody>
                 </table>
+                <Pagination 
+                    itemsCount={count}
+                    pageSize={pageSize}
+                    currentPage={currentPage}
+                    onPageChange={this.handlePageChange} />
             </React.Fragment>
         );
     }
+
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    
+    handleLike = (movie) => {
+        const movies = [...this.state.movies];
+        const index = movies.indexOf(movie);
+        movies[index] = {...movies[index]};
+        movies[index].liked = !movies[index].liked;
+        this.setState({
+            movies
+        });
+    };
+
+    handlePageChange = page => {
+        this.setState({
+            currentPage: page
+        });
+    };
 }
 
 export default Movies;
