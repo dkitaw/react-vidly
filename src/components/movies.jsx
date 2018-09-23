@@ -25,6 +25,17 @@ class Movies extends Component {
             genres
         });
     }
+
+    componentDidUpdate() {
+        const { movies, pageSize, currentPage } = this.state;
+        const itemsPageCount = paginate(movies, currentPage, pageSize).length;
+
+        if (movies.length > 0 && itemsPageCount === 0) {
+            this.setState({
+                currentPage: 1
+            });
+        }
+    }
     
     render() {
         const { length: count } = this.state.movies;
