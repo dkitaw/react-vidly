@@ -1,14 +1,7 @@
 import React from 'react';
 
-/**
- * Input:
- *   liked: boolean
- * Output:
- *   onClick: event
- */
-
  const Like = (props) => {
-    let classes = "fa fa-thumbs-";
+    let classes = "clickable fa fa-thumbs-";
     
     if (props.liked) {
         classes += "up";
@@ -19,7 +12,6 @@ import React from 'react';
     return (
         <i 
             className={classes} 
-            style={{cursor:"pointer"}}
             onClick={props.onClick}
             aria-hidden="true"/>
     );
