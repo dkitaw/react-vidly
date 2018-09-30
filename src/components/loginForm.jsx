@@ -6,7 +6,7 @@ class LoginForm extends Component {
             <div>
                 <h1>Login</h1>
                 <hr/>
-                <form>
+                <form onSubmit={this.handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="username">Username</label>
                         <input id="username" type="text" className="form-control"/>
@@ -20,6 +20,10 @@ class LoginForm extends Component {
             </div>
         );
     }
+
+    handleSubmit = e => {
+        e.preventDefault();
+    };
 }
  
 export default LoginForm;
