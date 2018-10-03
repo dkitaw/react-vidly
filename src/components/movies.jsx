@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import ListGroup from './common/listGroup';
 import Pagination from './common/pagination';
+import SearchBox from './common/searchBox';
 import MoviesTable from './moviesTables';
-import { Link } from 'react-router-dom';
 import { paginate } from '../utils/paginate';
 import { getMovies } from '../services/fakeMovieService';
 import { getGenres } from '../services/fakeGenreService';
@@ -14,6 +15,7 @@ class Movies extends Component {
         genres: [],
         pageSize: 5,
         currentPage: 1,
+        searchQuery: "",
         selectedGenre: {_id: '', name: 'All Genres'},
         sortColumn: { field: 'title', order: 'asc' }
     };
@@ -40,7 +42,7 @@ class Movies extends Component {
     
     render() {
         const { length: count } = this.state.movies;
-        const { pageSize, currentPage, sortColumn } = this.state;
+        const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
 
         if (count === 0) {
             return <p>There are not movies in the database.</p>
@@ -62,6 +64,7 @@ class Movies extends Component {
                         className="btn btn-primary"
                         style={{marginBottom:20}} >New Movie</Link>
                     <p>There are {totalCount} movies in the database.</p>
+                    <SearchBox value={searchQuery} onChange={this.handleSearch} />
                     <MoviesTable
                         movies={data}
                         onDelete={this.handleDelete}
@@ -102,6 +105,7 @@ class Movies extends Component {
     handleGenreSelect = genre => {
         this.setState({
             selectedGenre: genre,
+            searchQuery: "",
             currentPage: 1
         });
     };
@@ -112,17 +116,30 @@ class Movies extends Component {
         });
     };
 
-    getPagedData() {
-        const { pageSize, currentPage, selectedGenre, movies: allMovies, sortColumn } = this.state;
+    handleSearch = query => {
+        this.setState({
+            searchQuery: query,
+            selectedGenre: null,
+            currentPage: 1
+        });
+    };
 
-        const filtered = selectedGenre._id !== ''
-            ? allMovies.filter(m => m.genre._id === selectedGenre._id) 
-            : allMovies;
-        
+    getPagedData() {
+        const { pageSize, currentPage, selectedGenre, movies: allMovies, sortColumn, searchQuery } = this.state;
+
+        let filtered = allMovies;
+
+        if (searchQuery) {
+            filtered = allMovies.filter(m => m.title.toLowerCase().startsWith(searchQuery.toLowerCase()));
+        }
+        else if (selectedGenre && selectedGenre._id) {
+            filtered = allMovies.filter(m => m.genre._id === selectedGenre._id);
+        }
+                
         const sorted = _.orderBy(filtered, [sortColumn.field], [sortColumn.order])
 
         const movies = paginate(sorted, currentPage, pageSize);
-
+        
         return {
             totalCount: filtered.length,
             data: movies
