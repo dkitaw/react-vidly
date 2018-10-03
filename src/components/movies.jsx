@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ListGroup from './common/listGroup';
 import Pagination from './common/pagination';
 import MoviesTable from './moviesTables';
+import { Link } from 'react-router-dom';
 import { paginate } from '../utils/paginate';
 import { getMovies } from '../services/fakeMovieService';
 import { getGenres } from '../services/fakeGenreService';
@@ -56,6 +57,10 @@ class Movies extends Component {
                         onItemSelect={this.handleGenreSelect} />
                 </div>
                 <div className="col">
+                    <Link
+                        to="/movies/new"
+                        className="btn btn-primary"
+                        style={{marginBottom:20}} >New Movie</Link>
                     <p>There are {totalCount} movies in the database.</p>
                     <MoviesTable
                         movies={data}
