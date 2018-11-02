@@ -39,12 +39,12 @@ class MovieForm extends Form {
         );
     };
 
-    componentDidMount() {
-        const genres = getGenres();
+    async componentDidMount() {
+        const { data: genres } = await getGenres();
         
         this.setState({
             genres
-        })
+        });
 
         const movieId = this.props.match.params.id;
 
@@ -52,15 +52,21 @@ class MovieForm extends Form {
             return;
         }
 
-        const movie = getMovie(movieId);
+        try {
 
-        if (!movie) {
-            return this.props.history.replace("/not-found");
+            const { data: movie} = await getMovie(movieId);
+
+            this.setState({
+                data: this.mapToViewModel(movie)
+            });
+
+        } catch (error) {
+            if (error.response && error.response.status === 404) {
+                this.props.history.replace("/not-found");
+            }
         }
 
-        this.setState({
-            data: this.mapToViewModel(movie)
-        });
+
     };
 
     mapToViewModel(movie) {
