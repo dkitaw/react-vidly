@@ -40,33 +40,8 @@ class MovieForm extends Form {
     };
 
     async componentDidMount() {
-        const { data: genres } = await getGenres();
-        
-        this.setState({
-            genres
-        });
-
-        const movieId = this.props.match.params.id;
-
-        if (movieId === "new") {
-            return;
-        }
-
-        try {
-
-            const { data: movie} = await getMovie(movieId);
-
-            this.setState({
-                data: this.mapToViewModel(movie)
-            });
-
-        } catch (error) {
-            if (error.response && error.response.status === 404) {
-                this.props.history.replace("/not-found");
-            }
-        }
-
-
+        await this.pupulateGenres();
+        await this.populateMovies();
     };
 
     mapToViewModel(movie) {
@@ -82,6 +57,35 @@ class MovieForm extends Form {
     doSubmit = () => {
         saveMovie(this.state.data);
         this.props.history.push("/movies");
+    }
+
+    async pupulateGenres() {
+        const { data: genres } = await getGenres();
+        
+        this.setState({
+            genres
+        });
+    }
+
+    async populateMovies() {
+        try {
+            const movieId = this.props.match.params.id;
+    
+            if (movieId === "new") {
+                return;
+            }
+
+            const { data: movie} = await getMovie(movieId);
+
+            this.setState({
+                data: this.mapToViewModel(movie)
+            });
+
+        } catch (error) {
+            if (error.response && error.response.status === 404) {
+                this.props.history.replace("/not-found");
+            }
+        }
     }
 }
  
