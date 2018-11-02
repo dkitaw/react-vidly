@@ -6,7 +6,7 @@ import SearchBox from './common/searchBox';
 import MoviesTable from './moviesTables';
 import { paginate } from '../utils/paginate';
 import { getMovies } from '../services/fakeMovieService';
-import { getGenres } from '../services/fakeGenreService';
+import { getGenres } from '../services/genreService';
 import _ from 'lodash';
 
 class Movies extends Component {
@@ -20,8 +20,9 @@ class Movies extends Component {
         sortColumn: { field: 'title', order: 'asc' }
     };
 
-    componentDidMount() {
-        const genres = [this.state.selectedGenre, ...getGenres()];
+    async componentDidMount() {
+        const { data } = await getGenres();
+        const genres = [this.state.selectedGenre, ...data];
 
         this.setState({
             movies: getMovies(),
