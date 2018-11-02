@@ -14,5 +14,13 @@ export function getMovie(movieId) {
 }
 
 export function saveMovie(movie) {
-    debugger;
+    if (movie._id) {
+        
+        const body = { ...movie };
+        delete body._id;
+
+        return http.put(apiUrl + "/movies/" + movie._id, body);
+    } else {
+        return http.post(apiUrl + "/movies", movie);
+    }
 }
