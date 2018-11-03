@@ -8,17 +8,13 @@ React Build
 
     serve -s build
 
-Before
-
-    heroku create --buildpack https://github.com/mars/create-react-app-buildpack.git
-
 Heroku CLI
 
     First Deployment
 
         heroku login
 
-        heroku create
+        heroku create --buildpack https://github.com/mars/create-react-app-buildpack.git
 
         git push heroku master
 
