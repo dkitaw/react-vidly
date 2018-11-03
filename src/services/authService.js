@@ -1,11 +1,10 @@
 import jwtDecode from 'jwt-decode';
 import httpService from "./httpService";
-import { apiUrl } from '../config.json';
 
 const tokenKey = 'token';
 
 function endPointUrl() {
-    return `${apiUrl}/auth/`;
+    return "/auth/";
 }
 
 httpService.setJwt(getJwt());

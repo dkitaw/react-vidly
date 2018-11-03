@@ -1,11 +1,10 @@
 import http from "./httpService";
-import { apiUrl } from '../config.json';
 
 function endPointUrl(id) {
     if (id) {
-        return `${apiUrl}/movies/${id}`;
+        return `/movies/${id}`;
     } else {
-        return `${apiUrl}/movies/`;
+        return `/movies/`;
     }
 }
 
