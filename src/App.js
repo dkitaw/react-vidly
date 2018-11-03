@@ -23,11 +23,13 @@ class App extends Component {
   }
 
   render() {
+    const { user } = this.state;
+
     return (
       <React.Fragment>
         <ToastContainer />
         <NavBar
-          user={this.state.user} />
+          user={user} />
         <main className="container">
             <Switch>
               <Route 
@@ -41,7 +43,12 @@ class App extends Component {
                   component={RegisterForm} />
               <Route 
                 path="/movies/:id" 
-                component={MovieForm} />
+                render={ props => {
+                  if (!user) {
+                    return <Redirect to="/login"/>;
+                  }
+                  return <MovieForm {...props} />;
+                }} />
               <Route 
                 path="/movies" 
                 render={ props => 
