@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import logService from './logService';
+import authSevice from './authService';
+
+axios.defaults.headers.common['x-auth-token'] = authSevice.getJwt();
 
 axios.interceptors.response.use(null, error => {
     const expectedError = error.response && error.response.status >= 400 && error.response.status < 500;
