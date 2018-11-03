@@ -33,7 +33,7 @@ class LoginForm extends Form {
             const { data } = this.state;
             const { data: jwt } = await authService.login(data.username, data.password);
             localStorage.setItem('token', jwt);
-            this.props.history.replace("/");
+            window.location = '/';
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 const errors = {...this.state.errors};
